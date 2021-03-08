@@ -9,7 +9,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Run tests and upload reports to Coveralls
+      - name: Build
+        run: ./gradlew build
+
+      - name: Generate JaCoCo reports
+        run: ./gradlew jacocoTestReport
+
+      - name: Upload reports to Coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew jacocoTestReport coverallsJacoco
