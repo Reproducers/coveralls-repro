@@ -10,6 +10,12 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":module-one"))
+            }
+        }
+
         commonTest {
             dependencies { implementation("org.jetbrains.kotlin:kotlin-test-multiplatform") }
         }

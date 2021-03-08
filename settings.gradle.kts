@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 
 include("module-one")
+include("module-two")

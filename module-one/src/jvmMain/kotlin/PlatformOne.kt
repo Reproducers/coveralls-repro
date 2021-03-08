@@ -1,5 +1,5 @@
 package com.javiersc.coverallsRepro.moduleOne
 
-actual object Platform {
+actual object PlatformOne {
     actual val name = "JVM"
 }

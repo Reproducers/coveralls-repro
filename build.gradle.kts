@@ -3,19 +3,15 @@ plugins {
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.11"
 }
 
+val sources: List<File> =
+    subprojects
+        .map { project -> file("${project.projectDir}/src/").walkBottomUp().toSet().toList() }
+        .flatten()
 
 tasks.register<JacocoMerge>("jacocoMerge") {
     group = "verification"
     subprojects.onEach { subproject -> executionData(subproject.tasks.withType<Test>()) }
-    doFirst { executionData = files(executionData.filter { it.exists() }) }
-}
-
-val sources = subprojects.flatMap { project ->
-    listOf(
-        file("${project.projectDir}/src/commonMain/kotlin"),
-        file("${project.projectDir}/src/jvmMain/kotlin"),
-        file("${project.projectDir}/src/androidMain/kotlin")
-    )
+    doFirst { executionData = files(executionData.filter { file: File -> file.exists() }) }
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
@@ -24,9 +20,10 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     dependsOn(subprojects.map { it.tasks.getByName("check") })
     dependsOn("jacocoMerge")
 
-    val classes = subprojects.map { project ->
-        file("${project.buildDir}/classes/kotlin/jvm/main")
-    }
+    val classes =
+        subprojects.flatMap { project ->
+            file("${project.buildDir}/classes/kotlin/jvm/main").walkBottomUp().toSet()
+        }
 
     classDirectories.setFrom(classes)
     sourceDirectories.setFrom(files(sources))
@@ -39,8 +36,10 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     }
 }
 
+tasks.named("coverallsJacoco") { dependsOn("jacocoTestReport") }
+
 coverallsJacoco {
-    reportPath = "$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    reportPath = "${rootProject.buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 
     reportSourceSets = sources
 }
