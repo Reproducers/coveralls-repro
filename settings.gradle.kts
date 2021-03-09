@@ -4,6 +4,7 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         jcenter()
+        gradlePluginPortal()
     }
 }
 

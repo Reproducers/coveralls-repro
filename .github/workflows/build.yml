@@ -15,11 +15,6 @@ jobs:
       - name: Generate JaCoCo reports
         run: ./gradlew jacocoTestReport
 
-      - name: Upload reports to Coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew jacocoTestReport coverallsJacoco
-
       - name: Upload reports to Codecov
         uses: codecov/codecov-action@v1
         with:

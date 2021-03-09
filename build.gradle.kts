@@ -1,12 +1,24 @@
 plugins {
     jacoco
-    id("com.github.nbaztec.coveralls-jacoco") version "1.2.11"
     id("org.sonarqube") version "3.1.1"
+}
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
+    }
 }
 
 val sources: List<File> =
     subprojects
-        .map { project -> file("${project.projectDir}/src/").walkBottomUp().toSet().toList() }
+        .map { project ->
+            file("${project.projectDir}/src/")
+                .walkBottomUp()
+                .maxDepth(2)
+                .filter { it.name.contains("main") }
+                .toSet()
+                .toList()
+        }
         .flatten()
 
 tasks.register<JacocoMerge>("jacocoMerge") {
@@ -37,26 +49,16 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     }
 }
 
-tasks.named("coverallsJacoco") { dependsOn("jacocoTestReport") }
-
-coverallsJacoco {
-    reportPath = "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-
-    reportSourceSets = sources
-}
-subprojects {
-    sonarqube {
-        properties {
-            property("sonar.sources", "src")
-        }
-    }
-}
+subprojects { sonarqube { properties { property("sonar.sources", "src") } } }
 
 sonarqube {
     properties {
         property("sonar.projectKey", "Reproducers_coveralls-repro")
         property("sonar.organization", "reproducers")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        )
     }
 }
