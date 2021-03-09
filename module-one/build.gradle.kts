@@ -1,13 +1,12 @@
 plugins {
     kotlin("multiplatform")
     jacoco
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.11"
 }
 
 kotlin {
     jvm()
-    js(BOTH) {
-        nodejs()
-    }
+    js(BOTH) { nodejs() }
 
     sourceSets {
         commonTest {
@@ -20,30 +19,26 @@ kotlin {
     }
 }
 
-
 tasks.register<JacocoReport>("jacocoTestReport") {
     group = "verification"
 
     dependsOn("check")
 
-    val sources: List<File> =
-        file("$projectDir/src/")
-            .walkBottomUp()
-            .maxDepth(2)
-            .filter { it.path.contains("kotlin", ignoreCase = true) }
-            .filter { it.path.contains("main", ignoreCase = true) }
-            .toSet()
-            .toList()
+    classDirectories.setFrom(file("$buildDir/classes/kotlin/jvm/main").walkBottomUp().toSet())
+    sourceDirectories.setFrom(files(projectDir))
 
-    val classes = file("$buildDir/classes/kotlin/jvm/main").walkBottomUp().toSet()
-
-    classDirectories.setFrom(classes)
-    sourceDirectories.setFrom(files(sources))
-
-    executionData.setFrom("$buildDir/jacoco/jvmTest.exec")
+    executionData.setFrom(
+        fileTree(project.projectDir) { setIncludes(setOf("**/**/*.exec", "**/**/*.ec")) }
+    )
 
     reports {
         xml.isEnabled = true
         html.isEnabled = true
     }
+}
+
+coverallsJacoco {
+    reportPath = "$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    reportSourceSets = kotlin.sourceSets.flatMap { it.kotlin.srcDirs }
+    dryRun = true
 }

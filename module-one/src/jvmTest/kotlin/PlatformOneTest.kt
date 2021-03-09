@@ -8,6 +8,5 @@ internal class PlatformOneTest {
     @Test
     fun platformSuccessTest() {
         assertEquals(PlatformOne.name, "JVM")
-        assertEquals(CoverageOne().yes(), "coverage")
     }
 }
