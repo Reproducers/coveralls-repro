@@ -1,6 +1,7 @@
 plugins {
     jacoco
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.11"
+    id("org.sonarqube") version "3.1.1"
 }
 
 val sources: List<File> =
@@ -39,7 +40,23 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 tasks.named("coverallsJacoco") { dependsOn("jacocoTestReport") }
 
 coverallsJacoco {
-    reportPath = "${rootProject.buildDir}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    reportPath = "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 
     reportSourceSets = sources
+}
+subprojects {
+    sonarqube {
+        properties {
+            property("sonar.sources", "src")
+        }
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "Reproducers_coveralls-repro")
+        property("sonar.organization", "reproducers")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+    }
 }
