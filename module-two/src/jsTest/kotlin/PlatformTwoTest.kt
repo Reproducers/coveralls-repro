@@ -4,7 +4,7 @@ import com.javiersc.coverallsRepro.moduleOne.PlatformOne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class PlatformTwoTest {
+internal class PlatformTwoTest {
 
     @Test
     fun platformSuccessTest() {

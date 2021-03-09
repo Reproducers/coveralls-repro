@@ -3,7 +3,7 @@ package com.javiersc.coverallsRepro.moduleOne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CommonOneTest {
+internal class CommonOneTest {
 
     @Test
     fun commonOneSuccessTest() {

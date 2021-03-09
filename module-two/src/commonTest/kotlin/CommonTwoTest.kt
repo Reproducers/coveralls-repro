@@ -4,7 +4,7 @@ import com.javiersc.coverallsRepro.moduleOne.CommonOne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CommonTwoTest {
+internal class CommonTwoTest {
 
     @Test
     fun commonTwoSuccessTest() {
