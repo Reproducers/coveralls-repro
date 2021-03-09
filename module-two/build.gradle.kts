@@ -42,4 +42,5 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 coverallsJacoco {
     reportPath = "$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
     reportSourceSets = kotlin.sourceSets.flatMap { it.kotlin.srcDirs }
+    dryRun = true
 }

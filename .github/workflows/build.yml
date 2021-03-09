@@ -20,13 +20,13 @@ jobs:
         with:
           file: 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
 
+      - name: Upload reports to Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew jacocoTestReport coverallsJacoco
+
       - name: Upload reports to SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonarqube --info
-
-      - name: Upload reports to Coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew jacocoTestReport coverallsJacoco
