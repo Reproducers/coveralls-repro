@@ -15,15 +15,16 @@ jobs:
       - name: Generate JaCoCo reports
         run: ./gradlew jacocoTestReport
 
-      - name: Upload reports to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          file: 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+      - name: Generate JaCoCo root reports
+        run: ./gradlew jacocoRootReport
 
       - name: Upload reports to Coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew jacocoTestReport coverallsJacoco
+        run: ./gradlew jacocoTestReport jacocoRootReport coverallsJacoco
+
+      - name: Upload reports to Codecov
+        uses: codecov/codecov-action@v1
 
       - name: Upload reports to SonarCloud
         env:

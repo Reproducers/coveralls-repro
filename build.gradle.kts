@@ -56,11 +56,14 @@ sonarqube {
         property("sonar.projectKey", "Reproducers_coveralls-repro")
         property("sonar.organization", "reproducers")
         property("sonar.host.url", "https://sonarcloud.io")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            file("$buildDir/reports/jacoco/jacocoRootReport/jacocoRootReport.xml")
+        )
     }
 }
 
 coverallsJacoco {
-    reportPath = "$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+    reportPath = "$buildDir/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
     reportSourceSets = sources
-    dryRun = true
 }
