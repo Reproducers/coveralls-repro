@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
     jacoco
-    id("com.github.nbaztec.coveralls-jacoco") version "1.2.11"
 }
 
 kotlin {
@@ -35,10 +34,4 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         xml.isEnabled = true
         html.isEnabled = true
     }
-}
-
-coverallsJacoco {
-    reportPath = "$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-    reportSourceSets = kotlin.sourceSets.flatMap { it.kotlin.srcDirs }
-    dryRun = true
 }
